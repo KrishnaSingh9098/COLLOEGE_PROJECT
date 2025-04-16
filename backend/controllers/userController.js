@@ -26,7 +26,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     bankAccountNumber,
     bankAccountName,
     bankName,
-    easypaisaAccountNumber,
+    rajorPayAccountNumber,
     paypalEmail,
   } = req.body;
 
@@ -39,9 +39,9 @@ export const register = catchAsyncErrors(async (req, res, next) => {
         new ErrorHandler("Please provide your full bank details.", 400)
       );
     }
-    if (!easypaisaAccountNumber) {
+    if (!rajorPayAccountNumber) {
       return next(
-        new ErrorHandler("Please provide your easypaisa account number.", 400)
+        new ErrorHandler("Please provide your rajorPay account number.", 400)
       );
     }
     if (!paypalEmail) {
@@ -84,9 +84,9 @@ export const register = catchAsyncErrors(async (req, res, next) => {
         bankAccountName,
         bankName,
       },
-      easypaisa: {
-        easypaisaAccountNumber,
-      },
+      RazorPay: {
+          rajorPayAccountNumber,
+        },
       paypal: {
         paypalEmail,
       },
@@ -97,18 +97,24 @@ export const register = catchAsyncErrors(async (req, res, next) => {
 
 export const login = catchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
+
   if (!email || !password) {
-    return next(new ErrorHandler("Please fill full form."));
+    return next(new ErrorHandler("Please provide both email and password.", 400));
   }
+
   const user = await User.findOne({ email }).select("+password");
+
   if (!user) {
-    return next(new ErrorHandler("Invalid credentials.", 400));
+    return next(new ErrorHandler("Invalid Credentials.", 401));
   }
-  const isPasswordMatch = await user.comparePassword(password);
-  if (!isPasswordMatch) {
-    return next(new ErrorHandler("Invalid credentials.", 400));
+
+  const isPasswordMatched = await user.comparePassword(password);
+
+  if (!isPasswordMatched) {
+    return next(new ErrorHandler("Invalid Password.", 401));
   }
-  generateToken(user, "Login successfully.", 200, res);
+
+  generateToken(user, "Login Successful", 200, res);
 });
 
 export const getProfile = catchAsyncErrors(async (req, res, next) => {

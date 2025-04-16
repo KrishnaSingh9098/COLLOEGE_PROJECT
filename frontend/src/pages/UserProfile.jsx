@@ -1,4 +1,5 @@
 import Spinner from "@/custom-components/Spinner";
+// eslint-disable-next-line no-unused-vars
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -142,12 +143,14 @@ const UserProfile = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700">
-                        Easypaisa Account Number
+                        rajorPayAccountNumber
                       </label>
+                      
                       <input
                         type="text"
                         defaultValue={
-                          user.paymentMethods.easypaisa.easypaisaAccountNumber
+                          user.paymentMethods?.RazorPay
+                            ?.rajorPayAccountNumber || "N/A"
                         }
                         className="w-ful mt-1 p-2 border-gray-300 rounded-md focus:outline-none"
                         disabled
